@@ -1,11 +1,16 @@
-// Add click/touch support: toggle 'open' class
-document.querySelectorAll('.suitcase').forEach(s => {
+// Click/touch: toggle 'open' for the clicked suitcase. Close others when clicking outside.
+const suitcases = Array.from(document.querySelectorAll('.suitcase'));
+suitcases.forEach(s => {
   s.addEventListener('click', (e) => {
-    // allow hover to still work; toggle for touch devices
+    // Toggle this one
     s.classList.toggle('open');
   });
-  // close when clicking outside
-  document.addEventListener('click', (ev) => {
-    if (!s.contains(ev.target) && s.classList.contains('open')) s.classList.remove('open');
+});
+
+// Single document handler to close any open suitcase when clicking outside
+document.addEventListener('click', (ev) => {
+  const clicked = ev.target.closest('.suitcase');
+  suitcases.forEach(s => {
+    if (s !== clicked && s.classList.contains('open')) s.classList.remove('open');
   });
 });
