@@ -1,0 +1,122 @@
+:root{
+  --bg:#071027;
+  --leather-1:#7a4b2b; /* main leather tone */
+  --leather-2:#5a331f; /* darker grain */
+  --stitch:#e7c9b0;
+  --void:#000000;
+  --shadow: rgba(2,6,23,0.6);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, sans-serif;
+  background:linear-gradient(180deg,var(--bg),#071126 60%);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.stage{width:100%;max-width:960px;padding:40px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,280px);
+  grid-template-rows:repeat(2,200px);
+  gap:28px;
+  justify-content:center;
+  align-items:center;
+}
+.suitcase{
+  width:280px;height:200px;
+  perspective:1200px;
+  cursor:pointer;
+}
+.suitcase-inner{
+  width:100%;height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform 500ms cubic-bezier(.2,.8,.2,1);
+}
+/* leather lid */
+.lid{
+  position:absolute;left:0;right:0;top:0;height:64px;
+  background:linear-gradient(180deg, var(--leather-1), var(--leather-2));
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.08) 100%),
+    radial-gradient(1200px 500px at 10% 10%, rgba(255,255,255,0.02), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 1px, rgba(0,0,0,0.00) 3px);
+  border-radius:10px 10px 0 0;
+  box-shadow:0 10px 22px var(--shadow);
+  transform-origin:top center;
+  transform:rotateX(0deg);
+  transition:transform 320ms cubic-bezier(.2,.8,.2,1);
+  z-index:5;
+}
+.body{
+  position:absolute;left:0;right:0;bottom:0;top:64px;
+  border-radius:0 0 10px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  box-shadow:0 14px 34px rgba(0,0,0,0.45);
+  /* leather surface by default */
+  background:linear-gradient(180deg, var(--leather-1), var(--leather-2));
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.08) 100%),
+    radial-gradient(1200px 500px at 10% 10%, rgba(255,255,255,0.02), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 1px, rgba(0,0,0,0.00) 3px);
+  transition:background 360ms ease, box-shadow 360ms ease, transform 360ms ease;
+  color:var(--stitch);
+}
+.content{
+  transform:translateY(14px) translateZ(0);
+  opacity:0;
+  color:var(--stitch);
+  font-weight:800;
+  font-size:20px;
+  transition:all 240ms ease, color 240ms ease;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  mix-blend-mode:normal;
+}
+.suitcase:hover .lid, .suitcase.open .lid{transform:rotateX(-115deg)}
+.suitcase:hover .content, .suitcase.open .content{opacity:1;transform:translateY(0)}
+
+/* 3D rotation on the whole suitcase */
+.suitcase.open .suitcase-inner{transform:rotateY(16deg) translateZ(0)}
+.suitcase:hover .suitcase-inner{transform:rotateY(6deg)}
+
+/* when open, interior becomes a black void and letters invert color */
+.suitcase.open .body{
+  background:linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(2,2,2,1) 100%);
+  box-shadow: inset 0 40px 80px rgba(0,0,0,0.85), 0 18px 40px rgba(0,0,0,0.6);
+  transform:translateZ(-30px);
+}
+.suitcase.open .content{color:#fff;text-shadow:0 6px 18px rgba(0,0,0,0.9);font-size:22px}
+
+/* stitched strap detail */
+.suitcase::after{
+  content:'';position:absolute;left:12px;right:12px;top:46px;height:10px;border-radius:6px;background:linear-gradient(90deg, rgba(0,0,0,0.12), rgba(255,255,255,0.03));box-shadow:inset 0 -2px 0 rgba(255,255,255,0.02);
+}
+
+/* Add 3D depth with side shadows */
+.suitcase-inner::before{
+  content:'';position:absolute;left:-10px;top:10px;width:10px;height:180px;background:linear-gradient(90deg, rgba(0,0,0,0.3), transparent);transform:rotateY(-90deg) translateZ(5px);
+}
+.suitcase-inner::after{
+  content:'';position:absolute;right:-10px;top:10px;width:10px;height:180px;background:linear-gradient(90deg, transparent, rgba(0,0,0,0.3));transform:rotateY(90deg) translateZ(5px);
+}
+
+
+/* subtle handle */
+.suitcase::before{
+  content:'';position:absolute;left:50%;top:8px;width:64px;height:10px;background:#d6c3a0;border-radius:6px;transform:translateX(-50%);
+}
+
+@media (max-width:640px){
+  .grid{grid-template-columns:repeat(2,140px);grid-template-rows:repeat(2,120px);gap:20px}
+  .suitcase{width:140px;height:120px}
+  .lid{height:36px}
+  .content{font-size:14px}
+}
